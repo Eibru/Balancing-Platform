@@ -1,0 +1,259 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:BalancingPlatform.GUI.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Width="1280"
+        Height="720"
+        x:Class="BalancingPlatform.GUI.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        xmlns:Conv="using:BalancingPlatform.GUI.Converters"
+        xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
+        xmlns:scg="clr-namespace:System.Collections.Generic;assembly=netstandard"
+        CanResize="false"
+        Title="BalancingPlatform.GUI">
+    <Design.DataContext>
+        <!-- This only sets the DataContext for the previewer in an IDE,
+             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+    <Window.Resources>
+		<Conv:BitmapBitmapValueConverter x:Key="MatBitmapConv"/>
+        <Conv:ToNegativeValueConverter x:Key="NegConv"/>
+    </Window.Resources>
+
+    <TabControl >
+		<TabItem Header="Main">
+           <Grid ColumnDefinitions="auto,*" Margin="0,10,0,10">
+			   <Image DataContext="{Binding _cvRuntime}" Source="{Binding SrcFrame, Converter={StaticResource MatBitmapConv}, ConverterParameter={Binding $self.Source}}" Grid.Column="0" Tapped="Image_Tapped"/>
+               <Grid RowDefinitions="*,*" Grid.Column="1">
+
+				   <lvc:CartesianChart Grid.Row="0" SyncContext="{Binding Sync}">
+                       <lvc:CartesianChart.Title>
+                            <lvc:XamlDrawnLabelVisual Text="X" Paint="{lvc:SolidColorPaint Color='#303030'}" TextSize="25" Padding="{lvc:Padding '15'}"/>
+                        </lvc:CartesianChart.Title>
+                        <lvc:CartesianChart.Series>
+                            <lvc:XamlLineSeries Values="{Binding BallPosArrX}" GeometryFill="{x:Null}" GeometryStroke="{x:Null}" Fill="{x:Null}" LineSmoothness="0" AnimationsSpeed="0" Stroke="{lvc:SolidColorPaint Color='#3480eb', StrokeWidth=2, StrokeJoin=Miter}"/>
+                            <lvc:XamlLineSeries Values="{Binding SetpointArrX}" GeometryFill="{x:Null}" GeometryStroke="{x:Null}" Fill="{x:Null}" LineSmoothness="0" AnimationsSpeed="0" Stroke="{lvc:SolidColorPaint Color='#eb3434', StrokeWidth=2, StrokeJoin=Miter}"/>
+                        </lvc:CartesianChart.Series>
+                    </lvc:CartesianChart>
+
+                    <lvc:CartesianChart Grid.Row="1" SyncContext="{Binding Sync}">
+                        <lvc:CartesianChart.Title>
+                            <lvc:XamlDrawnLabelVisual Text="Y" Paint="{lvc:SolidColorPaint Color='#303030'}" TextSize="25" Padding="{lvc:Padding '15'}"/>
+                        </lvc:CartesianChart.Title>
+                        <lvc:CartesianChart.Series>
+                            <lvc:XamlLineSeries Values="{Binding BallPosArrY}" GeometryFill="{x:Null}" GeometryStroke="{x:Null}" Fill="{x:Null}" LineSmoothness="0" AnimationsSpeed="0" Stroke="{lvc:SolidColorPaint Color='#3480eb', StrokeWidth=2, StrokeJoin=Miter}"/>
+                            <lvc:XamlLineSeries Values="{Binding SetpointArrY}" GeometryFill="{x:Null}" GeometryStroke="{x:Null}" Fill="{x:Null}" LineSmoothness="0" AnimationsSpeed="0" Stroke="{lvc:SolidColorPaint Color='#eb3434', StrokeWidth=2, StrokeJoin=Miter}"/>
+                        </lvc:CartesianChart.Series>
+                    </lvc:CartesianChart>
+
+               </Grid>
+           </Grid>
+        </TabItem>
+        <TabItem Header="Settings">
+        </TabItem>
+        <TabItem Header="PID-Tuning">
+            <Grid ColumnDefinitions="auto,*" Margin="0,10,0,10">
+
+                <Grid Grid.Column="0" RowDefinitions="*,*,auto">
+
+                    <lvc:CartesianChart Grid.Row="0" Width="600" SyncContext="{Binding Sync}">
+                        <lvc:CartesianChart.Title>
+                            <lvc:XamlDrawnLabelVisual Text="X" Paint="{lvc:SolidColorPaint Color='#303030'}" TextSize="25" Padding="{lvc:Padding '15'}"/>
+                        </lvc:CartesianChart.Title>
+                        <lvc:CartesianChart.Series>
+                            <lvc:XamlLineSeries Values="{Binding BallPosArrX}" GeometryFill="{x:Null}" GeometryStroke="{x:Null}" Fill="{x:Null}" LineSmoothness="0" AnimationsSpeed="0" Stroke="{lvc:SolidColorPaint Color='#3480eb', StrokeWidth=2, StrokeJoin=Miter}"/>
+                            <lvc:XamlLineSeries Values="{Binding SetpointArrX}" GeometryFill="{x:Null}" GeometryStroke="{x:Null}" Fill="{x:Null}" LineSmoothness="0" AnimationsSpeed="0" Stroke="{lvc:SolidColorPaint Color='#eb3434', StrokeWidth=2, StrokeJoin=Miter}"/>
+                        </lvc:CartesianChart.Series>
+                    </lvc:CartesianChart>
+
+                    <lvc:CartesianChart Grid.Row="1" Width="600" SyncContext="{Binding Sync}">
+                        <lvc:CartesianChart.Title>
+                            <lvc:XamlDrawnLabelVisual Text="Y" Paint="{lvc:SolidColorPaint Color='#303030'}" TextSize="25" Padding="{lvc:Padding '15'}"/>
+                        </lvc:CartesianChart.Title>
+                        <lvc:CartesianChart.Series>
+                            <lvc:XamlLineSeries Values="{Binding BallPosArrY}" GeometryFill="{x:Null}" GeometryStroke="{x:Null}" Fill="{x:Null}" LineSmoothness="0" AnimationsSpeed="0" Stroke="{lvc:SolidColorPaint Color='#3480eb', StrokeWidth=2, StrokeJoin=Miter}"/>
+                            <lvc:XamlLineSeries Values="{Binding SetpointArrY}" GeometryFill="{x:Null}" GeometryStroke="{x:Null}" Fill="{x:Null}" LineSmoothness="0" AnimationsSpeed="0" Stroke="{lvc:SolidColorPaint Color='#eb3434', StrokeWidth=2, StrokeJoin=Miter}"/>
+                        </lvc:CartesianChart.Series>
+                    </lvc:CartesianChart>
+
+                    <StackPanel Spacing="10" Grid.Row="2" DataContext="{Binding _pidRuntime}">
+                        <StackPanel Orientation="Horizontal" Spacing="5">
+		                    <TextBlock Text="Output" Width="60" VerticalAlignment="Center"/>
+                            <TextBox Text="{Binding OutputX}" IsReadOnly="True" Width="100"/>
+                            <TextBox Text="{Binding OutputY}" IsReadOnly="True" Width="100"/>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal" Spacing="5">
+		                    <TextBlock Text="Error" Width="60" VerticalAlignment="Center"/>
+                            <TextBox Text="{Binding ErrorX}" IsReadOnly="True" Width="100"/>
+                            <TextBox Text="{Binding ErrorY}" IsReadOnly="True" Width="100"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Grid>
+
+                <ScrollViewer Grid.Column="1" Padding="0,0,10,0">
+                    <StackPanel>
+				        <StackPanel DataContext="{Binding _pidParams}">
+                            <Grid ColumnDefinitions="auto,*,auto" ColumnSpacing="10">
+						        <TextBlock Text="Kp" VerticalAlignment="Center" Width="100" Grid.Column="0"/>
+					            <Slider Value="{Binding Kp}" Minimum="0" Maximum="10" Grid.Column="1"/>
+                                <NumericUpDown Value="{Binding Kp}" Minimum="0" Maximum="10" Width="160" VerticalContentAlignment="Center" Height="20" Increment="0.01" Grid.Column="2"/>
+                            </Grid>
+                            <Grid ColumnDefinitions="auto,*,auto" ColumnSpacing="10">
+						        <TextBlock Text="Ki" VerticalAlignment="Center" Width="100" Grid.Column="0"/>
+					            <Slider Value="{Binding Ki}" Minimum="0" Maximum="10" Grid.Column="1"/>
+                                <NumericUpDown Value="{Binding Ki}" Minimum="0" Maximum="10" Width="160" VerticalContentAlignment="Center" Height="20" Increment="0.01" Grid.Column="2"/>
+                            </Grid>
+                            <Grid ColumnDefinitions="auto,*,auto" ColumnSpacing="10">
+						        <TextBlock Text="Kd" VerticalAlignment="Center" Width="100" Grid.Column="0"/>
+					            <Slider Value="{Binding Kd}" Minimum="0" Maximum="10" Grid.Column="1"/>
+                                <NumericUpDown Value="{Binding Kd}" Minimum="0" Maximum="10" Width="160" VerticalContentAlignment="Center" Height="20" Increment="0.01" Grid.Column="2"/>
+                            </Grid>
+                            <Grid ColumnDefinitions="auto,*,auto" ColumnSpacing="10">
+						        <TextBlock Text="Dt" VerticalAlignment="Center" Width="100" Grid.Column="0"/>
+					            <Slider Value="{Binding Dt}" Minimum="0.01" Maximum="1" Grid.Column="1"/>
+                                <NumericUpDown Value="{Binding Dt}" Minimum="0" Maximum="1" Width="160" VerticalContentAlignment="Center" Height="20" Increment="0.01" Grid.Column="2"/>
+                            </Grid>
+                            <Grid ColumnDefinitions="auto,*,auto" ColumnSpacing="10">
+						        <TextBlock Text="Min output" VerticalAlignment="Center" Width="100" Grid.Column="0"/>
+					            <Slider Value="{Binding MinOutput}" Minimum="-1000" Maximum="100" Grid.Column="1"/>
+                                <NumericUpDown Value="{Binding MinOutput}" Minimum="-1000" Maximum="100" Width="160" VerticalContentAlignment="Center" Height="20" Increment="1" Grid.Column="2"/>
+                            </Grid>
+                            <Grid ColumnDefinitions="auto,*,auto" ColumnSpacing="10">
+						        <TextBlock Text="Max output" VerticalAlignment="Center" Width="100" Grid.Column="0"/>
+					            <Slider Value="{Binding MaxOutput}" Minimum="0" Maximum="1000" Grid.Column="1"/>
+                                <NumericUpDown Value="{Binding MaxOutput}" Minimum="0" Maximum="1000" Width="160" VerticalContentAlignment="Center" Height="20" Increment="1" Grid.Column="2"/>
+                            </Grid>
+                            <Grid ColumnDefinitions="auto,*,auto" ColumnSpacing="10">
+						        <TextBlock Text="Alpha" VerticalAlignment="Center" Width="100" Grid.Column="0"/>
+					            <Slider Value="{Binding Alpha}" Minimum="0" Maximum="1" Grid.Column="1"/>
+                                <NumericUpDown Value="{Binding Alpha}" Minimum="0" Maximum="1" Width="160" VerticalContentAlignment="Center" Height="20" Increment="0.01" Grid.Column="2"/>
+                            </Grid>
+                        </StackPanel>
+                        <StackPanel>
+                            <Grid ColumnDefinitions="auto,*,auto" ColumnSpacing="10">
+						        <TextBlock Text="SetpointX" VerticalAlignment="Center" Width="100" Grid.Column="0"/>
+					            <Slider Value="{Binding _pidParams.SetpointX}" Minimum="{Binding _cvParams.PlatformRadius, Converter={StaticResource NegConv}}" Maximum="{Binding _cvParams.PlatformRadius}" Grid.Column="1"/>
+                                <NumericUpDown Value="{Binding _pidParams.SetpointX}" Minimum="{Binding _cvParams.PlatformRadius, Converter={StaticResource NegConv}}" Maximum="{Binding _cvParams.PlatformRadius}" Width="160" VerticalContentAlignment="Center" Height="20" Increment="1" Grid.Column="2"/>
+                            </Grid>
+                            <Grid ColumnDefinitions="auto,*,auto" ColumnSpacing="10">
+						        <TextBlock Text="SetpointY" VerticalAlignment="Center" Width="100" Grid.Column="0"/>
+					            <Slider Value="{Binding _pidParams.SetpointY}" Minimum="{Binding _cvParams.PlatformRadius, Converter={StaticResource NegConv}}" Maximum="{Binding _cvParams.PlatformRadius}" Grid.Column="1"/>
+                                <NumericUpDown Value="{Binding _pidParams.SetpointY}" Minimum="{Binding _cvParams.PlatformRadius, Converter={StaticResource NegConv}}" Maximum="{Binding _cvParams.PlatformRadius}" Width="160" VerticalContentAlignment="Center" Height="20" Increment="1" Grid.Column="2"/>
+                            </Grid>
+
+                            <Button Content="Save" Command="{Binding SavePidParamsCommand}" HorizontalAlignment="Right"/>
+                        </StackPanel>
+                    </StackPanel>
+                </ScrollViewer>
+            </Grid>
+        </TabItem>
+        <TabItem Header="CV-Tuning">
+            <Grid ColumnDefinitions="auto,*" Margin="0,10,0,10">
+
+                <Grid RowDefinitions="*,*,auto" Grid.Column="0" DataContext="{Binding _cvRuntime}">
+					<Image Source="{Binding SrcFrame, Converter={StaticResource MatBitmapConv}, ConverterParameter={Binding $self.Source}}" Grid.Row="0"/>
+                    <Image Source="{Binding MaskFrame, Converter={StaticResource MatBitmapConv}, ConverterParameter={Binding $self.Source}}" Grid.Row="1"/>
+                    <StackPanel Orientation="Horizontal" Spacing="5" Grid.Row="2" Margin="0,10,0,10">
+					    <TextBlock Text="Ballpos" Width="60" VerticalAlignment="Center"/>
+                        <TextBox Text="{Binding BallPosX}" IsReadOnly="True" Width="100"/>
+                        <TextBox Text="{Binding BallPosY}" IsReadOnly="True" Width="100"/>
+                    </StackPanel>
+                </Grid>
+				
+                <ScrollViewer Margin="10,0,0,0" Grid.Column="1" Padding="0,0,20,0">
+                    <StackPanel>
+                        <StackPanel DataContext="{Binding _cvParams}">
+                            <Grid ColumnDefinitions="auto,*,auto" ColumnSpacing="10">
+						        <TextBlock Text="Resolution" VerticalAlignment="Center" Width="120" Grid.Column="0"/>
+					            <Slider Value="{Binding Resolution}" Minimum="10" Maximum="1000" Grid.Column="1"/>
+                                <NumericUpDown Value="{Binding Resolution}" Minimum="0" Maximum="1000" Width="160" VerticalContentAlignment="Center" Height="20" Increment="1" Grid.Column="2"/>
+                            </Grid>
+                            <Grid ColumnDefinitions="auto,*,auto" ColumnSpacing="10">
+						        <TextBlock Text="Platform center X" VerticalAlignment="Center" Width="120" Grid.Column="0"/>
+					            <Slider Value="{Binding PlatformCenterX}" Minimum="0" Maximum="1000" Grid.Column="1"/>
+                                <NumericUpDown Value="{Binding PlatformCenterX}" Minimum="0" Maximum="1000" Width="160" VerticalContentAlignment="Center" Height="20" Increment="1" Grid.Column="2"/>
+                            </Grid>
+                            <Grid ColumnDefinitions="auto,*,auto" ColumnSpacing="10">
+						        <TextBlock Text="Platform center Y" VerticalAlignment="Center" Width="120" Grid.Column="0"/>
+					            <Slider Value="{Binding PlatformCenterY}" Minimum="0" Maximum="1000" Grid.Column="1"/>
+                                <NumericUpDown Value="{Binding PlatformCenterY}" Minimum="0" Maximum="1000" Width="160" VerticalContentAlignment="Center" Height="20" Increment="1" Grid.Column="2"/>
+                            </Grid>
+                            <Grid ColumnDefinitions="auto,*,auto" ColumnSpacing="10">
+						        <TextBlock Text="Platform radius" VerticalAlignment="Center" Width="120" Grid.Column="0"/>
+					            <Slider Value="{Binding PlatformRadius}" Minimum="0" Maximum="1000" Grid.Column="1"/>
+                                <NumericUpDown Value="{Binding PlatformRadius}" Minimum="0" Maximum="1000" Width="160" VerticalContentAlignment="Center" Height="20" Increment="1" Grid.Column="2"/>
+                            </Grid>
+                            <Grid ColumnDefinitions="auto,*,auto" ColumnSpacing="10">
+						        <TextBlock Text="Lower1_H" VerticalAlignment="Center" Width="120" Grid.Column="0"/>
+					            <Slider Value="{Binding Lower1_H}" Minimum="0" Maximum="255" Grid.Column="1"/>
+                                <NumericUpDown Value="{Binding Lower1_H}" Minimum="0" Maximum="255" Width="160" VerticalContentAlignment="Center" Height="20" Increment="1" Grid.Column="2"/>
+                            </Grid>
+                            <Grid ColumnDefinitions="auto,*,auto" ColumnSpacing="10">
+						        <TextBlock Text="Lower1_S" VerticalAlignment="Center" Width="120" Grid.Column="0"/>
+					            <Slider Value="{Binding Lower1_S}" Minimum="0" Maximum="255" Grid.Column="1"/>
+                                <NumericUpDown Value="{Binding Lower1_S}" Minimum="0" Maximum="255" Width="160" VerticalContentAlignment="Center" Height="20" Increment="1" Grid.Column="2"/>
+                            </Grid>
+                            <Grid ColumnDefinitions="auto,*,auto" ColumnSpacing="10">
+						        <TextBlock Text="Lower1_V" VerticalAlignment="Center" Width="120" Grid.Column="0"/>
+					            <Slider Value="{Binding Lower1_V}" Minimum="0" Maximum="255" Grid.Column="1"/>
+                                <NumericUpDown Value="{Binding Lower1_V}" Minimum="0" Maximum="255" Width="160" VerticalContentAlignment="Center" Height="20" Increment="1" Grid.Column="2"/>
+                            </Grid>
+                            <Grid ColumnDefinitions="auto,*,auto" ColumnSpacing="10">
+						        <TextBlock Text="Lower2_H" VerticalAlignment="Center" Width="120" Grid.Column="0"/>
+					            <Slider Value="{Binding Lower2_H}" Minimum="0" Maximum="255" Grid.Column="1"/>
+                                <NumericUpDown Value="{Binding Lower2_H}" Minimum="0" Maximum="255" Width="160" VerticalContentAlignment="Center" Height="20" Increment="1" Grid.Column="2"/>
+                            </Grid>
+                            <Grid ColumnDefinitions="auto,*,auto" ColumnSpacing="10">
+						        <TextBlock Text="Lower2_S" VerticalAlignment="Center" Width="120" Grid.Column="0"/>
+					            <Slider Value="{Binding Lower2_S}" Minimum="0" Maximum="255" Grid.Column="1"/>
+                                <NumericUpDown Value="{Binding Lower2_S}" Minimum="0" Maximum="255" Width="160" VerticalContentAlignment="Center" Height="20" Increment="1" Grid.Column="2"/>
+                            </Grid>
+                            <Grid ColumnDefinitions="auto,*,auto" ColumnSpacing="10">
+						        <TextBlock Text="Lower2_V" VerticalAlignment="Center" Width="120" Grid.Column="0"/>
+					            <Slider Value="{Binding Lower2_V}" Minimum="0" Maximum="255" Grid.Column="1"/>
+                                <NumericUpDown Value="{Binding Lower2_V}" Minimum="0" Maximum="255" Width="160" VerticalContentAlignment="Center" Height="20" Increment="1" Grid.Column="2"/>
+                            </Grid>
+                            <Grid ColumnDefinitions="auto,*,auto" ColumnSpacing="10">
+						        <TextBlock Text="Upper1_H" VerticalAlignment="Center" Width="120" Grid.Column="0"/>
+					            <Slider Value="{Binding Upper1_H}" Minimum="0" Maximum="255" Grid.Column="1"/>
+                                <NumericUpDown Value="{Binding Upper1_H}" Minimum="0" Maximum="255" Width="160" VerticalContentAlignment="Center" Height="20" Increment="1" Grid.Column="2"/>
+                            </Grid>
+                            <Grid ColumnDefinitions="auto,*,auto" ColumnSpacing="10">
+						        <TextBlock Text="Upper1_S" VerticalAlignment="Center" Width="120" Grid.Column="0"/>
+					            <Slider Value="{Binding Upper1_S}" Minimum="0" Maximum="255" Grid.Column="1"/>
+                                <NumericUpDown Value="{Binding Upper1_S}" Minimum="0" Maximum="255" Width="160" VerticalContentAlignment="Center" Height="20" Increment="1" Grid.Column="2"/>
+                            </Grid>
+                            <Grid ColumnDefinitions="auto,*,auto" ColumnSpacing="10">
+						        <TextBlock Text="Upper1_V" VerticalAlignment="Center" Width="120" Grid.Column="0"/>
+					            <Slider Value="{Binding Upper1_V}" Minimum="0" Maximum="255" Grid.Column="1"/>
+                                <NumericUpDown Value="{Binding Upper1_V}" Minimum="0" Maximum="255" Width="160" VerticalContentAlignment="Center" Height="20" Increment="1" Grid.Column="2"/>
+                            </Grid>
+                            <Grid ColumnDefinitions="auto,*,auto" ColumnSpacing="10">
+						        <TextBlock Text="Upper2_H" VerticalAlignment="Center" Width="120" Grid.Column="0"/>
+					            <Slider Value="{Binding Upper2_H}" Minimum="0" Maximum="255" Grid.Column="1"/>
+                                <NumericUpDown Value="{Binding Upper2_H}" Minimum="0" Maximum="255" Width="160" VerticalContentAlignment="Center" Height="20" Increment="1" Grid.Column="2"/>
+                            </Grid>
+                            <Grid ColumnDefinitions="auto,*,auto" ColumnSpacing="10">
+						        <TextBlock Text="Upper2_S" VerticalAlignment="Center" Width="120" Grid.Column="0"/>
+					            <Slider Value="{Binding Upper2_S}" Minimum="0" Maximum="255" Grid.Column="1"/>
+                                <NumericUpDown Value="{Binding Upper2_S}" Minimum="0" Maximum="255" Width="160" VerticalContentAlignment="Center" Height="20" Increment="1" Grid.Column="2"/>
+                            </Grid>
+                            <Grid ColumnDefinitions="auto,*,auto" ColumnSpacing="10">
+						        <TextBlock Text="Upper2_V" VerticalAlignment="Center" Width="120" Grid.Column="0"/>
+					            <Slider Value="{Binding Upper2_V}" Minimum="0" Maximum="255" Grid.Column="1"/>
+                                <NumericUpDown Value="{Binding Upper2_V}" Minimum="0" Maximum="255" Width="160" VerticalContentAlignment="Center" Height="20" Increment="1" Grid.Column="2"/>
+                            </Grid>
+                    
+                        
+                        </StackPanel>
+                        <Button Content="Save" Command="{Binding SaveCvParamsCommand}" HorizontalAlignment="Right"/>
+                    </StackPanel>
+                </ScrollViewer>
+            </Grid>
+        </TabItem>
+    </TabControl>
+</Window>
