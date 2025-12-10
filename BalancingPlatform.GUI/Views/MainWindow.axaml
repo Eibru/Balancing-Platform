@@ -21,12 +21,13 @@
     <Window.Resources>
 		<Conv:BitmapBitmapValueConverter x:Key="MatBitmapConv"/>
         <Conv:ToNegativeValueConverter x:Key="NegConv"/>
+        <Conv:ByteArrBitmapValueConverter x:Key="ByteArrBitmapConv"/>
     </Window.Resources>
 
     <TabControl >
 		<TabItem Header="Main">
            <Grid ColumnDefinitions="auto,*" Margin="0,10,0,10">
-			   <Image DataContext="{Binding _cvRuntime}" Source="{Binding SrcFrame, Converter={StaticResource MatBitmapConv}, ConverterParameter={Binding $self.Source}}" Grid.Column="0" Tapped="Image_Tapped"/>
+			   <Image DataContext="{Binding _cvRuntime}" Source="{Binding SrcFrame, Converter={StaticResource ByteArrBitmapConv}, ConverterParameter={Binding $self.Source}}" Grid.Column="0" Tapped="Image_Tapped"/>
                <Grid RowDefinitions="*,*" Grid.Column="1">
 
 				   <lvc:CartesianChart Grid.Row="0" SyncContext="{Binding Sync}">
@@ -155,8 +156,8 @@
             <Grid ColumnDefinitions="auto,*" Margin="0,10,0,10">
 
                 <Grid RowDefinitions="*,*,auto" Grid.Column="0" DataContext="{Binding _cvRuntime}">
-					<Image Source="{Binding SrcFrame, Converter={StaticResource MatBitmapConv}, ConverterParameter={Binding $self.Source}}" Grid.Row="0"/>
-                    <Image Source="{Binding MaskFrame, Converter={StaticResource MatBitmapConv}, ConverterParameter={Binding $self.Source}}" Grid.Row="1"/>
+					<Image Source="{Binding SrcFrame, Converter={StaticResource ByteArrBitmapConv}, ConverterParameter={Binding $self.Source}}" Grid.Row="0"/>
+                    <Image Source="{Binding MaskFrame, Converter={StaticResource ByteArrBitmapConv}, ConverterParameter={Binding $self.Source}}" Grid.Row="1"/>
                     <StackPanel Orientation="Horizontal" Spacing="5" Grid.Row="2" Margin="0,10,0,10">
 					    <TextBlock Text="Ballpos" Width="60" VerticalAlignment="Center"/>
                         <TextBox Text="{Binding BallPosX}" IsReadOnly="True" Width="100"/>
@@ -167,6 +168,11 @@
                 <ScrollViewer Margin="10,0,0,0" Grid.Column="1" Padding="0,0,20,0">
                     <StackPanel>
                         <StackPanel DataContext="{Binding _cvParams}">
+                            <Grid ColumnDefinitions="auto,*,auto" ColumnSpacing="10">
+						        <TextBlock Text="SampleDelay" VerticalAlignment="Center" Width="120" Grid.Column="0"/>
+					            <Slider Value="{Binding SampleDelay}" Minimum="1" Maximum="1000" Grid.Column="1"/>
+                                <NumericUpDown Value="{Binding SampleDelay}" Minimum="1" Maximum="1000" Width="160" VerticalContentAlignment="Center" Height="20" Increment="1" Grid.Column="2"/>
+                            </Grid>
                             <Grid ColumnDefinitions="auto,*,auto" ColumnSpacing="10">
 						        <TextBlock Text="Resolution" VerticalAlignment="Center" Width="120" Grid.Column="0"/>
 					            <Slider Value="{Binding Resolution}" Minimum="10" Maximum="1000" Grid.Column="1"/>

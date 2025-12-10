@@ -17,7 +17,7 @@ public partial class MainWindowViewModel : ObservableObject {
     public PidRuntime _pidRuntime { get; set; }
     public ServoRuntime _servoRuntime { get; set; }
 
-    private Timer timer = new Timer(100);
+    private Timer timer = new Timer(50);
 
     public ObservableCollection<double> BallPosArrX { get; set; } = new ObservableCollection<double>();
     public ObservableCollection<double> BallPosArrY { get; set; } = new ObservableCollection<double>();

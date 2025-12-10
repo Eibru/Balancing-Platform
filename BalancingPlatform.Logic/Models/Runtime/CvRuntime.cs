@@ -15,9 +15,9 @@ public class CvRuntime : INotifyPropertyChanged{
 
     private double _ballPosX;
     private double _ballPosY;
-    private Bitmap _src;
-    private Bitmap _hsv;
-    private Bitmap _mask;
+    private byte[] _src;
+    private byte[] _hsv;
+    private byte[] _mask;
 
     public double BallPosX {
         get {
@@ -51,7 +51,7 @@ public class CvRuntime : INotifyPropertyChanged{
         }
     }
 
-    public Bitmap SrcFrame {
+    public byte[] SrcFrame {
         get {
             lock (_lock) {
                 return _src;
@@ -67,7 +67,7 @@ public class CvRuntime : INotifyPropertyChanged{
         }
     }
 
-    public Bitmap HsvFrame {
+    public byte[] HsvFrame {
         get {
             lock (_lock) {
                 return _hsv;
@@ -83,7 +83,7 @@ public class CvRuntime : INotifyPropertyChanged{
         }
     }
 
-    public Bitmap MaskFrame {
+    public byte[] MaskFrame {
         get {
             lock (_lock) {
                 return _mask;

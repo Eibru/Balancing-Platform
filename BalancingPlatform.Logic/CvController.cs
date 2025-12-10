@@ -17,9 +17,18 @@ public class CvController {
     }
 
     public async Task Run(CancellationToken cancellationToken) {
-        var testSource = new Mat("./ball.jpg");
-        var cameraSource = Cv2.CreateFrameSource_Camera(0);
-        
+        var platformColor = new Scalar(255, 0, 255);
+        var setpointColor = new Scalar(255, 0, 0);
+        var objectColor = new Scalar(0, 255, 0);
+        var hsvObjectColor = new Scalar(0, 0, 0);
+
+        long lastGc = 0;
+
+        //Initialize camera
+        using var vc = VideoCapture.FromCamera(0);
+        //using var vc = new VideoCapture(0, VideoCaptureAPIs.);
+        //using var cameraSource = Cv2.CreateFrameSource_Camera(0);
+
         while (!cancellationToken.IsCancellationRequested) {
             //Read params
             var delay = _cvParams.SampleDelay;
@@ -41,17 +50,13 @@ public class CvController {
             var size = _cvParams.Resolution;
             var setpointX = _pidParams.SetpointX;
             var setpointY = _pidParams.SetpointY;
+            var ballPosX = 0.0;
+            var ballPosY = 0.0;
 
-            var platformColor = new Scalar(255, 0, 255);
-            var setpointColor = new Scalar(255, 0, 0);
-            var objectColor = new Scalar(0, 255, 0);
-            var hsvObjectColor = new Scalar(0, 0, 0);
-
-
-            //TODO Read camera frame
-            //var actSource = testSource;
-            Mat actSource = new Mat();
-            cameraSource.NextFrame(actSource);
+            //Read camera frame
+            var actSource = new Mat();
+            vc.Read(actSource);
+            //cameraSource.NextFrame(actSource);
 
             var width = actSource.Width;
             var height = actSource.Height;
@@ -59,7 +64,7 @@ public class CvController {
 
             var src = actSource[new Rect((width - v) / 2, (height - v) / 2, v, v)];
 
-            if(size < v)
+            if (size < v)
                 src = src.Resize(new Size(size, size));
 
             //Convert to hsv color space
@@ -100,15 +105,31 @@ public class CvController {
                         hsv.Circle((int)center.X, (int)center.Y, (int)radius, hsvObjectColor, 2);
                         hsv.Circle((int)center.X, (int)cent.Y, 2, hsvObjectColor, -1);
 
-                        _cvRuntime.BallPosX = -(platformCenterX - center.X);
-                        _cvRuntime.BallPosY = -(platformCenterY - center.Y);
+                        ballPosX = -(platformCenterX - center.X);
+                        ballPosY = -(platformCenterY - center.Y);
                     }
                 }
             }
 
-            _cvRuntime.SrcFrame = OpenCvSharp.Extensions.BitmapConverter.ToBitmap(src);
-            _cvRuntime.HsvFrame = OpenCvSharp.Extensions.BitmapConverter.ToBitmap(hsv);
-            _cvRuntime.MaskFrame = OpenCvSharp.Extensions.BitmapConverter.ToBitmap(mask);
+            _cvRuntime.BallPosX = ballPosX;
+            _cvRuntime.BallPosY = ballPosY;
+
+            using (var ms = src.ToMemoryStream()) {
+                _cvRuntime.SrcFrame = ms.ToArray();
+            }
+
+            using (var ms = hsv.ToMemoryStream()) {
+                _cvRuntime.HsvFrame = ms.ToArray();
+            }
+
+            using (var ms = mask.ToMemoryStream()){
+                _cvRuntime.MaskFrame = ms.ToArray();
+            }
+
+            if (DateTimeOffset.Now.ToUnixTimeMilliseconds() - lastGc >= 10000) {
+                GC.Collect();
+                lastGc = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+            }
 
             await Task.Delay(delay);
         }
