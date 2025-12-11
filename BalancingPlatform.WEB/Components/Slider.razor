@@ -1,0 +1,24 @@
+﻿@typeparam T where T : struct, System.Numerics.INumber<T>
+
+<MudStack Row>
+    <MudText>@Label</MudText>
+    <MudSlider @rendermode="InteractiveServer" T="T" @bind-Value="Value" Variant="Variant.Filled"/>
+    <MudField Variant="Variant.Filled"/>
+</MudStack>
+
+@code {
+    [Parameter]
+    public string Label { get; set; }
+
+    [Parameter]
+    public T Value { get; set; }
+
+    [Parameter]
+    public T Min { get; set; }
+
+    [Parameter]
+    public T Max { get; set; }
+
+    [Parameter]
+    public EventCallback<T> ValueChanged { get; set; }
+}

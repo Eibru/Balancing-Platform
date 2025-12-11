@@ -1,0 +1,84 @@
+﻿@inject MainWindowViewModel vm
+@inject IJSRuntime JS
+@inject HttpClient httpClient
+
+@rendermode InteractiveServer
+
+@page "/"
+
+<MudTabs>
+    <MudTabPanel Text="Main">
+
+    </MudTabPanel>
+    <MudTabPanel Text="Pid">
+        <MudStack Row>
+            <MudStack>
+                <!--Charts go here-->
+            </MudStack>
+            <MudStack Style="width: 500px">
+                <!--Params goes here-->
+                <MudSlider ValueLabel @bind-Value="vm._pidParams.Kp" Min="0" Max="10" Step="0.0001">Kp</MudSlider>
+                <MudSlider ValueLabel @bind-Value="vm._pidParams.Ki" Min="0" Max="10" Step="0.0001">Ki</MudSlider>
+                <MudSlider ValueLabel @bind-Value="vm._pidParams.Kd" Min="0" Max="10" Step="0.0001">Kd</MudSlider>
+                <MudSlider ValueLabel @bind-Value="vm._pidParams.Dt" Min="0.01" Max="1" Step="0.0001">Dt</MudSlider>
+                <MudSlider ValueLabel @bind-Value="vm._pidParams.MinOutput" Min="-1000" Max="1000">Min output</MudSlider>
+                <MudSlider ValueLabel @bind-Value="vm._pidParams.MaxOutput" Min="-1000" Max="1000">Max output</MudSlider>
+                <MudSlider ValueLabel @bind-Value="vm._pidParams.Alpha" Min="0" Max="1" Step="0.0001">Alpha</MudSlider>
+                <MudSlider ValueLabel @bind-Value="vm._pidParams.SetpointX" Min="-vm._cvParams.PlatformRadius" Max="vm._cvParams.PlatformRadius">SetpointX</MudSlider>
+                <MudSlider ValueLabel @bind-Value="vm._pidParams.SetpointY" Min="-vm._cvParams.PlatformRadius" Max="vm._cvParams.PlatformRadius">SetpointX</MudSlider>
+                <MudButton OnClick="vm.SavePidParamsCommand.Execute">Save</MudButton>
+            </MudStack>
+        </MudStack>
+    </MudTabPanel>
+    <MudTabPanel Text="CV">
+        <MudStack Row>
+            <MudStack>
+                <!--Video feed goes here-->
+                <MudImage Width="300" Height="300" Src="/cvruntime/src"/>
+                <MudImage Width="300" Height="300" Src="/cvruntime/mask" />
+                <MudStack Row>
+                    <MudNumericField Label="BallposX" ReadOnly Value="@vm._cvRuntime.BallPosX" />
+                    <MudNumericField Label="BallposY" ReadOnly Value="@vm._cvRuntime.BallPosY" />
+                </MudStack>
+            </MudStack>
+            <MudStack Style="width: 500px">
+                <!--Params goes here-->
+                <MudSlider ValueLabel @bind-Value="@vm._cvParams.SampleDelay" Min="1" Max="1000">Sample delay</MudSlider>
+                <MudSlider ValueLabel T="uint" @bind-Value="@vm._cvParams.Resolution" Min="10" Max="1000">Resolution</MudSlider>
+                <MudSlider ValueLabel T="uint" @bind-Value="@vm._cvParams.PlatformCenterX" Min="0" Max="255">Platform center x</MudSlider>
+                <MudSlider ValueLabel T="uint" @bind-Value="@vm._cvParams.PlatformCenterY" Min="0" Max="255">Platform center y</MudSlider>
+                <MudSlider ValueLabel T="uint" @bind-Value="@vm._cvParams.PlatformRadius" Min="0" Max="255">Platform radius</MudSlider>
+                <MudSlider ValueLabel T="byte" @bind-Value="@vm._cvParams.Lower1_H" Min="0" Max="255">Lower1 H</MudSlider>
+                <MudSlider ValueLabel T="byte" @bind-Value="@vm._cvParams.Lower1_S" Min="0" Max="255">Lower1 S</MudSlider>
+                <MudSlider ValueLabel T="byte" @bind-Value="@vm._cvParams.Lower1_V" Min="0" Max="255">Lower1 V</MudSlider>
+                <MudSlider ValueLabel T="byte" @bind-Value="@vm._cvParams.Lower2_H" Min="0" Max="255">Lower2 H</MudSlider>
+                <MudSlider ValueLabel T="byte" @bind-Value="@vm._cvParams.Lower2_S" Min="0" Max="255">Lower2 S</MudSlider>
+                <MudSlider ValueLabel T="byte" @bind-Value="@vm._cvParams.Lower2_V" Min="0" Max="255">Lower2 V</MudSlider>
+                <MudSlider ValueLabel T="byte" @bind-Value="@vm._cvParams.Upper1_H" Min="0" Max="255">Upper1 H</MudSlider>
+                <MudSlider ValueLabel T="byte" @bind-Value="@vm._cvParams.Upper1_S" Min="0" Max="255">Upper1 S</MudSlider>
+                <MudSlider ValueLabel T="byte" @bind-Value="@vm._cvParams.Upper1_V" Min="0" Max="255">Upper1 V</MudSlider>
+                <MudSlider ValueLabel T="byte" @bind-Value="@vm._cvParams.Upper2_H" Min="0" Max="255">Upper2 H</MudSlider>
+                <MudSlider ValueLabel T="byte" @bind-Value="@vm._cvParams.Upper2_S" Min="0" Max="255">Upper2 S</MudSlider>
+                <MudSlider ValueLabel T="byte" @bind-Value="@vm._cvParams.Upper2_V" Min="0" Max="255">Upper2 V</MudSlider>
+                <MudButton OnClick="vm.SaveCvParamsCommand.Execute">Save</MudButton>
+                
+                @* <Slider @rendermode="InteractiveServer" T="int" Label="Sample delay" @bind-Value="@vm._cvParams.SampleDelay" Min="0" Max="1000"/> *@
+            </MudStack>
+        </MudStack>
+    </MudTabPanel>
+</MudTabs>
+
+
+@code{
+    private MudImage src;
+
+    protected override async Task OnInitializedAsync()
+    {
+        vm.PropertyChanged += PropertyChanged;
+    }
+
+    private async void PropertyChanged(object sender, EventArgs a)
+    {
+        await InvokeAsync(StateHasChanged);
+    }
+}
